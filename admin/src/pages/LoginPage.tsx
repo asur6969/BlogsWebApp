@@ -2,6 +2,8 @@ import { useForm } from "react-hook-form";
 import { TextInput } from "../components/Inputs/TextInput";
 import { PasswordInput } from "../components/Inputs/PasswordInput";
 import { Button } from "../components/Buttons/Button";
+import { useLogin } from "../hooks/useAuth";
+import toast from "react-hot-toast";
 
 export interface LoginFormat {
   username: string;
@@ -9,6 +11,7 @@ export interface LoginFormat {
 }
 
 export function LoginPage() {
+  const { loading, errors: error, login } = useLogin();
   const {
     register,
     handleSubmit,
@@ -16,8 +19,12 @@ export function LoginPage() {
   } = useForm();
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const onSubmit = (data: any) => {
-    console.log("data", data);
+  const onSubmit = async (data: any) => {
+    await toast.promise(login(data), {
+      loading: <p>Loggin In ...</p>,
+      success: <p className="text-green-500">LogIn Successfull.</p>,
+      error: <p className="text-red-500">Login Failed.</p>,
+    });
   };
 
   return (
@@ -30,9 +37,9 @@ export function LoginPage() {
           name="username"
           placeholder="enter username..."
           error={
-            typeof errors.username?.message === "string"
+            (typeof errors.username?.message === "string"
               ? errors.username.message
-              : null
+              : null) || error?.username
           } // Display error message if exists
         />
         <PasswordInput
@@ -42,12 +49,22 @@ export function LoginPage() {
           name="password"
           placeholder="enter password..."
           error={
-            typeof errors.password?.message === "string"
+            (typeof errors.password?.message === "string"
               ? errors.password.message
-              : null
+              : null) || error?.password
           } // Display error message if exists
         />
-        <Button type="submit" label="login" />
+        {error?.error && (
+          <span className="text-red-500 text-sm m-1 font-serif shake">
+            {error.error}
+          </span>
+        )}
+        <Button
+          type="submit"
+          label="login"
+          loading={loading}
+          disabled={loading}
+        />
       </form>
     </div>
   );

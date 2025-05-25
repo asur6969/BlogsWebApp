@@ -38,7 +38,8 @@ export const InfoContainer: FC = () => {
   return (
     <div
       ref={tooltipRef}
-      className="bg-black text-white px-2 py-1 rounded text-sm fixed pointer-events-none z-50 whitespace-nowrap"
+      className="bg-white/75 text-black/80 px-2 py-1 rounded text-sm hidden md:flex fixed pointer-events-none z-50 
+      whitespace-nowrap"
       style={{
         top: `${top}px`,
         left: `${left}px`,

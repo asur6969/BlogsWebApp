@@ -27,18 +27,18 @@ export const Button: FC<ButtonProps> = ({
       )}
       <button
         type={type}
-        disabled={disabled}
+        disabled={disabled || loading}
         onClick={onClick}
         onMouseEnter={() => dispatch(setInfo("Login Button"))}
         onMouseLeave={() => dispatch(setInfo(null))}
-        className={`text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out text-nowrap
+        className={`min-w-[40%] text-white font-bold py-2 px-4 rounded transition duration-100 ease-in-out text-nowrap
         ${
-          disabled || loading
+          disabled
             ? "opacity-50 cursor-not-allowed bg-gray-400"
-            : "bg-blue-500 hover:bg-blue-700 cursor-pointer hover:font-bold hover:shadow-lg"
+            : "bg-blue-500 hover:bg-blue-700 cursor-pointer hover:shadow-lg"
         }`}
       >
-        {loading ? "wait..." : label}
+        {loading ? <div className="spinner" /> : label}
       </button>
     </div>
   );

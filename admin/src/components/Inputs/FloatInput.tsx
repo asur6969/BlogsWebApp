@@ -1,27 +1,33 @@
 import type { FC } from "react";
-// import type { useForm } from "react-hook-form";
 import { useForm } from "react-hook-form";
+import { FloatOnly } from "../../helper/FloatOnly";
 
-export interface TextInputProps {
-  placeholder?: string;
-  label?: string;
-  value?: string;
-  required?: boolean;
+export interface FloatInputProps {
   name: string;
+  placeholder: string;
+  register: ReturnType<typeof useForm>["register"];
+  label?: string;
+  value?: number;
+  required?: boolean;
+  min?: number;
+  max?: number;
   minLength?: number;
   maxLength?: number;
-  register: ReturnType<typeof useForm>["register"];
+  step?: number;
   error?: string | null;
 }
 
-export const TextInput: FC<TextInputProps> = ({
+export const FloatInput: FC<FloatInputProps> = ({
   placeholder,
   label,
   required,
   register,
   name,
+  min,
+  max,
   minLength,
   maxLength,
+  step,
   error,
 }) => {
   return (
@@ -32,6 +38,11 @@ export const TextInput: FC<TextInputProps> = ({
       <input
         type="text"
         placeholder={placeholder}
+        onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) =>
+          FloatOnly(e, step)
+        }
+        min={min}
+        max={max}
         minLength={minLength}
         maxLength={maxLength}
         {...register(name, {
@@ -44,9 +55,7 @@ export const TextInput: FC<TextInputProps> = ({
             ${error ? "border-red-500" : "border-gray-300"}`}
       />
       {error && (
-        <span className="text-red-500 text-sm m-1 font-serif shake">
-          {error}
-        </span>
+        <span className="text-red-500 text-sm m-1 font-serif">{error}</span>
       )}
     </div>
   );

@@ -2,7 +2,7 @@ import axios from "axios";
 
 const Axios = axios.create({
   //   baseURL: process.env.REACT_APP_API_BASE_URL,
-  baseURL: "http://localhost:8080",
+  baseURL: "http://localhost:5184",
   timeout: 10000, // 10 seconds
   headers: {
     "Content-Type": "application/json",
@@ -27,6 +27,7 @@ Axios.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       // Handle unauthorized access
+      console.log("unautherized triggered");
     }
     return Promise.reject(error);
   },

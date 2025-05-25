@@ -1,6 +1,8 @@
 import { useState, type FC } from "react";
 import type { useForm } from "react-hook-form";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { Eye, EyeOff } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { setInfo } from "../../slices/infoSlice/infoSlice";
 
 export interface PasswordInputProps {
   placeholder: string;
@@ -8,6 +10,8 @@ export interface PasswordInputProps {
   value?: string;
   required?: boolean;
   name: string;
+  minLength?: number;
+  maxLength?: number;
   register: ReturnType<typeof useForm>["register"]; // Register function from react-hook-form
   error?: string | null; // Error message to display
 }
@@ -18,9 +22,12 @@ export const PasswordInput: FC<PasswordInputProps> = ({
   name,
   register,
   required,
+  minLength,
+  maxLength,
   error,
 }) => {
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const dispatch = useDispatch();
 
   return (
     <div className=" flex flex-col justify-center items-start text-black m-2 text-nowrap">
@@ -31,6 +38,8 @@ export const PasswordInput: FC<PasswordInputProps> = ({
         <input
           type={showPassword ? "text" : "password"}
           placeholder={placeholder}
+          minLength={minLength}
+          maxLength={maxLength}
           {...register(name, {
             required: {
               value: required || false,
@@ -47,15 +56,29 @@ export const PasswordInput: FC<PasswordInputProps> = ({
           className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-600 hover:text-black"
         >
           {showPassword ? (
-            <FaRegEye className="text-gray-300" />
+            <Eye
+              className="text-gray-300 cursor-pointer"
+              strokeWidth={2}
+              size={22}
+              onMouseEnter={() => dispatch(setInfo("Show/Hide Password"))}
+              onMouseLeave={() => dispatch(setInfo(null))}
+            />
           ) : (
-            <FaRegEyeSlash className="text-gray-300" />
+            <EyeOff
+              className="text-gray-300 cursor-pointer"
+              strokeWidth={2}
+              size={22}
+              onMouseEnter={() => dispatch(setInfo("Show/Hide Password"))}
+              onMouseLeave={() => dispatch(setInfo(null))}
+            />
           )}
         </button>
       </div>
 
       {error && (
-        <span className="text-red-500 text-sm m-1 font-serif">{error}</span>
+        <span className="text-red-500 text-sm m-1 font-serif shake">
+          {error}
+        </span>
       )}
     </div>
   );
