@@ -1,4 +1,4 @@
-import { useState, type FC } from "react";
+import { useRef, useState, type FC, type KeyboardEvent } from "react";
 import type { useForm } from "react-hook-form";
 import { Eye, EyeOff } from "lucide-react";
 import { useDispatch } from "react-redux";
@@ -26,8 +26,25 @@ export const PasswordInput: FC<PasswordInputProps> = ({
   maxLength,
   error,
 }) => {
+  const keysPressed = useRef<Record<string, boolean>>({});
+
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const dispatch = useDispatch();
+
+  // trigger's when a key is pressed in password input field.
+  const onKeyDown = (e: KeyboardEvent<HTMLInputElement>): void => {
+    keysPressed.current[e.key.toLowerCase()] = true;
+
+    if (keysPressed.current["control"] && keysPressed.current[" "]) {
+      e.preventDefault();
+      setShowPassword((prev) => !prev);
+    }
+  };
+
+  // trigger's when a key is pressed in password input field.
+  const onKeyUp = (e: KeyboardEvent<HTMLInputElement>): void => {
+    keysPressed.current[e.key.toLowerCase()] = false;
+  };
 
   return (
     <div className=" flex flex-col justify-center items-start text-black m-2 text-nowrap">
@@ -40,6 +57,8 @@ export const PasswordInput: FC<PasswordInputProps> = ({
           placeholder={placeholder}
           minLength={minLength}
           maxLength={maxLength}
+          onKeyDown={onKeyDown}
+          onKeyUp={onKeyUp}
           {...register(name, {
             required: {
               value: required || false,
@@ -60,7 +79,9 @@ export const PasswordInput: FC<PasswordInputProps> = ({
               className="text-gray-300 cursor-pointer"
               strokeWidth={2}
               size={22}
-              onMouseEnter={() => dispatch(setInfo("Show/Hide Password"))}
+              onMouseEnter={() =>
+                dispatch(setInfo("Show/Hide Password (Ctrl+Space)"))
+              }
               onMouseLeave={() => dispatch(setInfo(null))}
             />
           ) : (
@@ -68,7 +89,9 @@ export const PasswordInput: FC<PasswordInputProps> = ({
               className="text-gray-300 cursor-pointer"
               strokeWidth={2}
               size={22}
-              onMouseEnter={() => dispatch(setInfo("Show/Hide Password"))}
+              onMouseEnter={() =>
+                dispatch(setInfo("Show/Hide Password (Ctrl+Space)"))
+              }
               onMouseLeave={() => dispatch(setInfo(null))}
             />
           )}

@@ -29,7 +29,7 @@ export const Button: FC<ButtonProps> = ({
         type={type}
         disabled={disabled || loading}
         onClick={onClick}
-        onMouseEnter={() => dispatch(setInfo("Login Button"))}
+        onMouseEnter={() => dispatch(setInfo(`${label} Button`))}
         onMouseLeave={() => dispatch(setInfo(null))}
         className={`min-w-[40%] text-white font-bold py-2 px-4 rounded transition duration-100 ease-in-out text-nowrap
         ${

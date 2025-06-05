@@ -24,8 +24,8 @@ export const NumberInput: FC<NumberInputProps> = ({
   required,
   register,
   name,
-  min,
-  max,
+  min = Number.NEGATIVE_INFINITY,
+  max = Number.POSITIVE_INFINITY,
   minLength,
   maxLength,
   step,
@@ -43,13 +43,21 @@ export const NumberInput: FC<NumberInputProps> = ({
           NumbersOnly(e, step)
         }
         min={min}
-        max={max}
+        max={Number(max || Number.POSITIVE_INFINITY)}
         minLength={minLength}
         maxLength={maxLength}
         {...register(name, {
           required: {
             value: required || false,
             message: `${name} is required`,
+          },
+          min: {
+            value: min,
+            message: `cannot be less than ${min}`,
+          },
+          max: {
+            value: max,
+            message: `cannot be greater than ${max}`,
           },
         })} // Register the input with react-hook-form
         className={`border-2 rounded-md p-2 w-full h-10 text-black my-0.5 font-mono
